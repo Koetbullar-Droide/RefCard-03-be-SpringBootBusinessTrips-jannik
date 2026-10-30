@@ -5,6 +5,17 @@ Trips, Flüge, Meetings). Teil der CI/CD-Übungssequenz **RefCard 02–05**
 (siehe [`docs/future/RefCard-03-RefCard-05-own-repos.md`](docs/future/RefCard-03-RefCard-05-own-repos.md))
 — dieses Repository ist **RefCard 03**: Spring Boot Backend mit MariaDB.
 
+## Deployment auf AWS ECS (Fargate) – zuerst die Skripte ausführen
+
+Bevor ihr auf `main` pusht, muss die AWS-Infrastruktur existieren – sonst schlägt der Job `deploy-ecs` fehl.
+
+1. Learner Lab starten, die Zugangsdaten (*AWS Details → AWS CLI*) in `~/.aws/credentials` unter `[learner-lab]` eintragen
+2. `./scripts/aws-ecs-setup.sh` – legt **einmalig** ECR, RDS, Secret, Load Balancer, Cluster und Services für Backend **und** Frontend an und trägt Account-ID, RDS-Endpoint und Secret-ARN in `task-definition.json` ein
+3. `./scripts/set-aws-secrets.sh` – überträgt die Lab-Zugangsdaten als GitHub Secrets in beide Repos (**nach jedem Lab-Neustart wiederholen**, sie laufen ab)
+4. Committen und auf `main` pushen → die Pipeline baut die Images und deployt sie
+
+Details: [`docs/LOESUNG-EX-02-EX-03.md`](docs/LOESUNG-EX-02-EX-03.md)
+
 ## Tech-Stack
 
 - Java 21, Spring Boot 4.1 (Web, Data JPA)

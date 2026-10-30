@@ -20,7 +20,7 @@
       "secrets": [
         {
           "name": "SPRING_DATASOURCE_PASSWORD",
-          "valueFrom": "biztrips-backend-db-password"
+          "valueFrom": "arn:aws:secretsmanager:us-east-1:469340975259:secret:biztrips-backend-db-password-uqXdvC"
         }
       ],
       "logConfiguration": {

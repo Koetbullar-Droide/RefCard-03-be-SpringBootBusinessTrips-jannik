@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # EX-03: Legt die komplette AWS-Infrastruktur für Backend + Frontend auf ECS (Fargate) an.
-# Einmalig ausführen, nachdem die Learner-Lab-Credentials im Profil "academy" stehen:
+# Einmalig ausführen, nachdem die Learner-Lab-Credentials im Profil "learner-lab" stehen:
 #   ./scripts/aws-ecs-setup.sh [pfad-zum-frontend-repo]
 set -euo pipefail
 
@@ -44,7 +44,8 @@ aws rds create-db-instance \
   --db-name db_biztrips \
   --vpc-security-group-ids "$SG_DB" \
   --no-publicly-accessible >/dev/null
-aws secretsmanager create-secret --name biztrips-backend-db-password --secret-string "$DB_PASSWORD" >/dev/null
+# ECS braucht die volle Secrets-Manager-ARN (nur der Name würde im SSM Parameter Store gesucht)
+SECRET_ARN=$(aws secretsmanager create-secret --name biztrips-backend-db-password --secret-string "$DB_PASSWORD" --query ARN --output text)
 
 # --- ECR-Repositories + ECS-Cluster ---
 aws ecr create-repository --repository-name biztrips-backend >/dev/null
@@ -71,7 +72,7 @@ aws rds wait db-instance-available --db-instance-identifier biztrips-backend-db
 RDS_ENDPOINT=$(aws rds describe-db-instances --db-instance-identifier biztrips-backend-db \
   --query "DBInstances[0].Endpoint.Address" --output text)
 
-sed -i.bak -e "s/<ACCOUNT_ID>/$ACCOUNT_ID/g" -e "s/<RDS_ENDPOINT>/$RDS_ENDPOINT/g" task-definition.json && rm task-definition.json.bak
+sed -i.bak -e "s/<ACCOUNT_ID>/$ACCOUNT_ID/g" -e "s/<RDS_ENDPOINT>/$RDS_ENDPOINT/g" -e "s#<DB_SECRET_ARN>#$SECRET_ARN#g" task-definition.json && rm task-definition.json.bak
 sed -i.bak -e "s/<ACCOUNT_ID>/$ACCOUNT_ID/g" "$FE_REPO/task-definition.json" && rm "$FE_REPO/task-definition.json.bak"
 
 # --- Task Definitions registrieren und Services anlegen (je 2 Tasks) ---
