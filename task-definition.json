@@ -14,7 +14,7 @@
       "essential": true,
       "environment": [
         { "name": "SPRING_PROFILES_ACTIVE", "value": "mariadb" },
-        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:mariadb://biztrips-backend-db.cq1gkioqinkh.us-east-1.rds.amazonaws.com:3306/db_biztrips" },
+        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:mariadb://biztrips-backend-db.cq1gkioqinkh.us-east-1.rds.amazonaws.com:3306/db_biztrips?sslMode=trust" },
         { "name": "SPRING_DATASOURCE_USERNAME", "value": "admin" }
       ],
       "secrets": [

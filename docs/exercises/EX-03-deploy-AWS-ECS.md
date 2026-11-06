@@ -192,7 +192,7 @@ Ein Fargate-Cluster braucht keine eigenen EC2-Instanzen â€” der Cluster ist zunÃ
       "essential": true,
       "environment": [
         { "name": "SPRING_PROFILES_ACTIVE", "value": "mariadb" },
-        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:mariadb://<rds-endpoint>:3306/db_biztrips" },
+        { "name": "SPRING_DATASOURCE_URL", "value": "jdbc:mariadb://<rds-endpoint>:3306/db_biztrips?sslMode=trust" },
         { "name": "SPRING_DATASOURCE_USERNAME", "value": "admin" }
       ],
       "secrets": [
